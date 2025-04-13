@@ -45,10 +45,12 @@ describe("ParticipantRegistry", function () {
     });
 
     it("Should not register the same address twice", async function () {
-        // We're using the manufacturer account which was already registered
-        await expect(
-            participantRegistry.connect(manufacturer).registerParticipant(1, "DistributorB")
-        ).to.be.revertedWith("Address already registered.");
+        // Using the expectRevert helper from @openzeppelin/test-helpers
+        // Try to register manufacturer again (which was already registered)
+        await expectRevert(
+            participantRegistry.connect(manufacturer).registerParticipant(1, "DistributorB"),
+            "Address already registered."
+        );
     });
 
     it("Should return the correct participant type", async function () {
