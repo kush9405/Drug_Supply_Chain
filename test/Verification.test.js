@@ -1,5 +1,6 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+import { expect } from "chai";
+import hardhat from "hardhat";
+const { ethers } = hardhat;
 
 describe("Verification", function () {
     let ParticipantRegistry;
@@ -30,7 +31,7 @@ describe("Verification", function () {
         await verification.deployed();
 
         // Register the manufacturer
-        await participantRegistry.registerParticipant(0, "ManufacturerA", { from: manufacturer.address }); // Manufacturer
+        await participantRegistry.connect(manufacturer).registerParticipant(0, "ManufacturerA"); // Manufacturer
     });
 
     it("Should return true for a valid drug", async function () {

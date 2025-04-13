@@ -1,5 +1,6 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+import { expect } from "chai";
+import hardhat from "hardhat";
+const { ethers } = hardhat;
 
 describe("DrugSupplyChain Integration", function () {
     let ParticipantRegistry;
@@ -32,7 +33,7 @@ describe("DrugSupplyChain Integration", function () {
         await verification.deployed();
 
         // Register participants
-        await participantRegistry.registerParticipant(0, "ManufacturerA", { from: manufacturer.address }); // Manufacturer
+        await participantRegistry.connect(manufacturer).registerParticipant(0, "ManufacturerA"); // Manufacturer
         await participantRegistry.registerParticipant(1, "DistributorB", { from: distributor.address });   // Distributor
         await participantRegistry.registerParticipant(2, "PharmacyC", { from: pharmacy.address });      // Pharmacy
 

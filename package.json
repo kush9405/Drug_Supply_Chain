@@ -1,7 +1,9 @@
 {
   "name": "hardhat-project",
+  "type": "module",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "chai": "^4.3.7",
     "ethers": "^5.8.0",
     "hardhat": "^2.23.0"
   },

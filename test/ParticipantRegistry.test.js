@@ -1,5 +1,6 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+import { expect } from "chai";
+import hardhat from "hardhat";
+const { ethers } = hardhat;
 
 describe("ParticipantRegistry", function () {
     let ParticipantRegistry;
@@ -7,21 +8,22 @@ describe("ParticipantRegistry", function () {
     let owner;
     let addr1;
     let addr2;
+    let manufacturer;
 
     beforeEach(async function () {
         // Deploy the contract before each test
         ParticipantRegistry = await ethers.getContractFactory("ParticipantRegistry");
-        [owner, addr1, addr2] = await ethers.getSigners();
+        [owner, addr1, addr2, manufacturer] = await ethers.getSigners();
         participantRegistry = await ParticipantRegistry.deploy();
         await participantRegistry.deployed();
     });
 
     it("Should register a manufacturer", async function () {
-        await participantRegistry.registerParticipant(0, "ManufacturerA"); // 0 for Manufacturer
-        const participant = await participantRegistry.participants(owner.address);
+        await participantRegistry.connect(manufacturer).registerParticipant(0, "ManufacturerA"); // 0 for Manufacturer
+        const participant = await participantRegistry.participants(manufacturer.address);
         expect(participant.participantType).to.equal(0);
         expect(participant.name).to.equal("ManufacturerA");
-        expect(await participantRegistry.isParticipant(owner.address)).to.equal(true);
+        expect(await participantRegistry.isParticipant(manufacturer.address)).to.equal(true);
     });
 
     it("Should register a distributor", async function () {
