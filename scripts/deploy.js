@@ -7,7 +7,9 @@ async function main() {
 
     const DrugTracking = await hre.ethers.getContractFactory("DrugTracking");
     console.log("Deploying DrugTracking...");
-    const drugTracking = await DrugTracking.deploy(participantRegistryAddress);
+    const drugTracking = await DrugTracking.deploy(participantRegistryAddress, {
+        gasLimit: 6000000, // Increase gas limit
+    });
     await drugTracking.deployed();
     console.log("DrugTracking deployed to:", drugTracking.address);
 
