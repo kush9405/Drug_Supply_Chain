@@ -7,7 +7,6 @@ import {
     FormControl,
     FormLabel,
     Input,
-    Select,
     useToast
 } from '@chakra-ui/react';
 
