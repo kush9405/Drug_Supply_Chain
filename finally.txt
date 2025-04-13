@@ -1,0 +1,4 @@
+ParticipantRegistry deployed to: 0x2Df27729beA73294526d5b05aD358cf8eB5385B7
+DrugTracking deployed to: 0x15CA4B98f6b6dD5769601D41E33B66BC5Fb1dA5b
+Deploying Verification...
+Verification deployed to: 0xC3a43340A5abab214fc9ee5B00F2e1fdd98A7D5B
