@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.28;
+
+import "./DrugTracking.sol";
 // Verification.sol
 contract Verification {
     // This contract will handle the verification of drugs authenticity

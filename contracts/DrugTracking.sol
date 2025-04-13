@@ -1,5 +1,7 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.28;
+
+import "./ParticipantRegistry.sol"; // Ensure the correct path to the file
 
 contract DrugTracking {
 

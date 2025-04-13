@@ -2,17 +2,17 @@
 const hre = require("hardhat");
 
 async function main() {
-    const ParticipantRegistry = await hre.ethers.getContractFactory("ParticipantRegistry");
-    const participantRegistry = await ParticipantRegistry.deploy();
-    await participantRegistry.deployed();
-    console.log("ParticipantRegistry deployed to:", participantRegistry.address);
+    const participantRegistryAddress = "0x2Df27729beA73294526d5b05aD358cf8eB5385B7"; // Replace with the deployed address
+    console.log("Using existing ParticipantRegistry at:", participantRegistryAddress);
 
     const DrugTracking = await hre.ethers.getContractFactory("DrugTracking");
-    const drugTracking = await DrugTracking.deploy(participantRegistry.address);
+    console.log("Deploying DrugTracking...");
+    const drugTracking = await DrugTracking.deploy(participantRegistryAddress);
     await drugTracking.deployed();
     console.log("DrugTracking deployed to:", drugTracking.address);
 
-     const Verification = await hre.ethers.getContractFactory("Verification");
+    const Verification = await hre.ethers.getContractFactory("Verification");
+    console.log("Deploying Verification...");
     const verification = await Verification.deploy(drugTracking.address);
     await verification.deployed();
     console.log("Verification deployed to:", verification.address);
