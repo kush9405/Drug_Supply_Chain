@@ -22,6 +22,7 @@ contract DrugTracking {
     event DrugAdded(uint256 drugId, string name, string lotNumber, address manufacturer);
     event DrugTransferred(uint256 drugId, address from, address to);
     event DrugMarkedCounterfeit(uint256 drugId);
+    event DebugCurrentHolder(uint256 drugId, address currentHolder);
 
     constructor(address _participantRegistryAddress) {
         participantRegistry = ParticipantRegistry(_participantRegistryAddress);
@@ -48,12 +49,14 @@ contract DrugTracking {
 
 
     function transferDrug(uint256 _drugId, address _newHolder) public onlyDistributorOrPharmacy {
+        emit DebugCurrentHolder(_drugId, drugs[_drugId].currentHolder); // Log before transfer
         require(drugs[_drugId].currentHolder == msg.sender, "You are not the current holder of this drug.");
         require(participantRegistry.isParticipant(_newHolder), "The new holder must be a registered participant.");
 
         drugs[_drugId].currentHolder = _newHolder;
         drugs[_drugId].timestamp = block.timestamp;
 
+        emit DebugCurrentHolder(_drugId, drugs[_drugId].currentHolder); // Log after transfer
         emit DrugTransferred(_drugId, msg.sender, _newHolder);
     }
 

@@ -35,11 +35,9 @@ describe("DrugSupplyChain Integration", function () {
         await verification.deployed();
 
         // Register participants
-        // Corrected code in DrugSupplyChain.test.js
         await participantRegistry.connect(manufacturer).registerParticipant(0, "ManufacturerA"); // Manufacturer
         await participantRegistry.connect(distributor).registerParticipant(1, "DistributorB");   // Distributor
         await participantRegistry.connect(pharmacy).registerParticipant(2, "PharmacyC");
-
     });
 
     it("Should add a drug, transfer it, and verify it", async function () {
@@ -47,12 +45,23 @@ describe("DrugSupplyChain Integration", function () {
         await drugTracking.connect(manufacturer).addDrug("Aspirin", "LOT123");
         const drugId = 1;
 
-        // Register distributor and pharmacy
-        await participantRegistry.connect(distributor).registerParticipant(1, "DistributorB"); // Distributor
-        await participantRegistry.connect(pharmacy).registerParticipant(2, "PharmacyC");     // Pharmacy
+        // Verify manufacturer is the current holder
+        let drugInfo = await drugTracking.getDrugInfo(drugId);
+        expect(drugInfo.currentHolder).to.equal(manufacturer.address);
 
-        // Transfer the drug (as distributor)
+        // Transfer the drug from manufacturer to distributor
+        await drugTracking.connect(manufacturer).transferDrug(drugId, distributor.address);
+
+        // Verify distributor is the current holder
+        drugInfo = await drugTracking.getDrugInfo(drugId);
+        expect(drugInfo.currentHolder).to.equal(distributor.address);
+
+        // Transfer the drug from distributor to pharmacy
         await drugTracking.connect(distributor).transferDrug(drugId, pharmacy.address);
+
+        // Verify pharmacy is the current holder
+        drugInfo = await drugTracking.getDrugInfo(drugId);
+        expect(drugInfo.currentHolder).to.equal(pharmacy.address);
 
         // Verify the drug (as pharmacy)
         const isAuthentic = await verification.verifyDrug(drugId);
