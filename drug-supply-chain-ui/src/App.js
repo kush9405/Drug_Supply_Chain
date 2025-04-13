@@ -1,10 +1,10 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
 import { ChakraProvider, Container, Heading, Box, Text } from '@chakra-ui/react';
-import RegisterParticipant from './RegisterParticipant';
-import AddDrug from './AddDrug';
-import TransferDrug from './TransferDrug';
-import VerifyDrug from './VerifyDrug';
+import RegisterParticipant from './components/RegisterParticipant';
+import AddDrug from './components/AddDrug';
+import TransferDrug from './components/TransferDrug';
+import VerifyDrug from './components/VerifyDrug';
 
 function App() {
     const [participantRegistryAddress, setParticipantRegistryAddress] = useState('');
