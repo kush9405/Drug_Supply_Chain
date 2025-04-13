@@ -1,5 +1,7 @@
 import { expect } from "chai";
 import hardhat from "hardhat";
+import pkg from "@openzeppelin/test-helpers"; // Import as default
+const { expectRevert } = pkg; // Destructure the required helper
 const { ethers } = hardhat;
 
 describe("Verification", function () {

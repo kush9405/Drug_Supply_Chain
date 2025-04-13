@@ -1,14 +1,14 @@
 // scripts/deploy.js
-const hre = require("hardhat");
+import hre from "hardhat";
 
 async function main() {
-    const participantRegistryAddress = "0x2Df27729beA73294526d5b05aD358cf8eB5385B7"; // Replace with the deployed address
+    const participantRegistryAddress = "0x2Df27729beA73294526d5b05aD358cf8eB5385B7";
     console.log("Using existing ParticipantRegistry at:", participantRegistryAddress);
 
     const DrugTracking = await hre.ethers.getContractFactory("DrugTracking");
     console.log("Deploying DrugTracking...");
     const drugTracking = await DrugTracking.deploy(participantRegistryAddress, {
-        gasLimit: 6000000, // Increase gas limit
+        gasLimit: 6000000,
     });
     await drugTracking.deployed();
     console.log("DrugTracking deployed to:", drugTracking.address);

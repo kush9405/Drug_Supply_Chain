@@ -1,5 +1,7 @@
 import { expect } from "chai";
 import hardhat from "hardhat";
+import pkg from "@openzeppelin/test-helpers"; // Import as default
+const { expectRevert } = pkg; // Destructure the required helper
 const { ethers } = hardhat;
 
 describe("DrugSupplyChain Integration", function () {
@@ -45,8 +47,9 @@ describe("DrugSupplyChain Integration", function () {
         await drugTracking.connect(manufacturer).addDrug("Aspirin", "LOT123");
         const drugId = 1;
 
-        // Transfer the drug (as manufacturer)
-        await drugTracking.connect(manufacturer).transferDrug(drugId, distributor.address);
+        // Register distributor and pharmacy
+        await participantRegistry.connect(distributor).registerParticipant(1, "DistributorB"); // Distributor
+        await participantRegistry.connect(pharmacy).registerParticipant(2, "PharmacyC");     // Pharmacy
 
         // Transfer the drug (as distributor)
         await drugTracking.connect(distributor).transferDrug(drugId, pharmacy.address);
