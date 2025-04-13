@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import hardhat from "hardhat";
+const { expectRevert } = require('@openzeppelin/test-helpers'); // Import expectRevert
 const { ethers } = hardhat;
 
 describe("ParticipantRegistry", function () {
@@ -45,7 +46,11 @@ describe("ParticipantRegistry", function () {
 
     it("Should not register the same address twice", async function () {
         await participantRegistry.registerParticipant(0, "ManufacturerA");
-        await expect(participantRegistry.registerParticipant(1, "DistributorB")).to.be.revertedWith("Address already registered.");
+        await expectRevert( // Use expectRevert
+            participantRegistry.registerParticipant(1, "DistributorB"),
+            "Address already registered."
+        );
+    });
     });
 
     it("Should return the correct participant type", async function () {
@@ -59,4 +64,3 @@ describe("ParticipantRegistry", function () {
         const participantName = await participantRegistry.getParticipantName(owner.address);
         expect(participantName).to.equal("DistributorB");
     });
-});

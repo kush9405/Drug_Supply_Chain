@@ -33,9 +33,10 @@ describe("DrugSupplyChain Integration", function () {
         await verification.deployed();
 
         // Register participants
+        // Corrected code in DrugSupplyChain.test.js
         await participantRegistry.connect(manufacturer).registerParticipant(0, "ManufacturerA"); // Manufacturer
-        await participantRegistry.registerParticipant(1, "DistributorB", { from: distributor.address });   // Distributor
-        await participantRegistry.registerParticipant(2, "PharmacyC", { from: pharmacy.address });      // Pharmacy
+        await participantRegistry.connect(distributor).registerParticipant(1, "DistributorB");   // Distributor
+        await participantRegistry.connect(pharmacy).registerParticipant(2, "PharmacyC");
 
     });
 
