@@ -12,8 +12,8 @@ describe("ParticipantRegistry", function () {
     let addr2;
     let manufacturer;
 
-    beforeEach(async function () {
-        // Deploy the contract before each test
+    before(async function () {
+        // Deploy the contract once before all tests
         ParticipantRegistry = await ethers.getContractFactory("ParticipantRegistry");
         [owner, addr1, addr2, manufacturer] = await ethers.getSigners();
         participantRegistry = await ParticipantRegistry.deploy();
@@ -29,38 +29,35 @@ describe("ParticipantRegistry", function () {
     });
 
     it("Should register a distributor", async function () {
-        await participantRegistry.registerParticipant(1, "DistributorB"); // 1 for Distributor
-        const participant = await participantRegistry.participants(owner.address);
+        await participantRegistry.connect(addr1).registerParticipant(1, "DistributorB"); // 1 for Distributor
+        const participant = await participantRegistry.participants(addr1.address);
         expect(participant.participantType).to.equal(1);
         expect(participant.name).to.equal("DistributorB");
-        expect(await participantRegistry.isParticipant(owner.address)).to.equal(true);
+        expect(await participantRegistry.isParticipant(addr1.address)).to.equal(true);
     });
 
     it("Should register a pharmacy", async function () {
-        await participantRegistry.registerParticipant(2, "PharmacyC"); // 2 for Pharmacy
-        const participant = await participantRegistry.participants(owner.address);
+        await participantRegistry.connect(addr2).registerParticipant(2, "PharmacyC"); // 2 for Pharmacy
+        const participant = await participantRegistry.participants(addr2.address);
         expect(participant.participantType).to.equal(2);
         expect(participant.name).to.equal("PharmacyC");
-         expect(await participantRegistry.isParticipant(owner.address)).to.equal(true);
+        expect(await participantRegistry.isParticipant(addr2.address)).to.equal(true);
     });
 
     it("Should not register the same address twice", async function () {
-        await participantRegistry.registerParticipant(0, "ManufacturerA");
-        await expectRevert(
-            participantRegistry.registerParticipant(1, "DistributorB"),
-            "Address already registered."
-        );
+        // We're using the manufacturer account which was already registered
+        await expect(
+            participantRegistry.connect(manufacturer).registerParticipant(1, "DistributorB")
+        ).to.be.revertedWith("Address already registered.");
     });
 
     it("Should return the correct participant type", async function () {
-        await participantRegistry.registerParticipant(0, "ManufacturerA");
-        const participantType = await participantRegistry.getParticipantType(owner.address);
+        const participantType = await participantRegistry.getParticipantType(manufacturer.address);
         expect(participantType).to.equal(0);
     });
 
     it("Should return the correct participant name", async function () {
-        await participantRegistry.registerParticipant(1, "DistributorB");
-        const participantName = await participantRegistry.getParticipantName(owner.address);
+        const participantName = await participantRegistry.getParticipantName(addr1.address);
         expect(participantName).to.equal("DistributorB");
     });
 });

@@ -40,6 +40,11 @@ contract DrugTracking {
         _;
     }
 
+    modifier onlyCurrentHolder(uint256 _drugId) {
+        require(drugs[_drugId].currentHolder == msg.sender, "You are not the current holder of this drug.");
+        _;
+    }
+
 
     function addDrug(string memory _name, string memory _lotNumber) public onlyManufacturer {
         drugCount++;
@@ -48,10 +53,17 @@ contract DrugTracking {
     }
 
 
-    function transferDrug(uint256 _drugId, address _newHolder) public onlyDistributorOrPharmacy {
+    function transferDrug(uint256 _drugId, address _newHolder) public onlyCurrentHolder(_drugId) {
         emit DebugCurrentHolder(_drugId, drugs[_drugId].currentHolder); // Log before transfer
-        require(drugs[_drugId].currentHolder == msg.sender, "You are not the current holder of this drug.");
         require(participantRegistry.isParticipant(_newHolder), "The new holder must be a registered participant.");
+        
+        // Allow manufacturer to transfer, but only if they're the current holder
+        require(
+            participantRegistry.getParticipantType(msg.sender) == ParticipantRegistry.ParticipantType.Manufacturer ||
+            participantRegistry.getParticipantType(msg.sender) == ParticipantRegistry.ParticipantType.Distributor ||
+            participantRegistry.getParticipantType(msg.sender) == ParticipantRegistry.ParticipantType.Pharmacy,
+            "Only registered participants can transfer drugs."
+        );
 
         drugs[_drugId].currentHolder = _newHolder;
         drugs[_drugId].timestamp = block.timestamp;

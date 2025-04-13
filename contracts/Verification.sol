@@ -16,17 +16,18 @@ contract Verification {
 
     // A very basic example, replace with actual signature verification
     function verifyDrug(uint256 _drugId) public view returns (bool) {
-        (uint256 drugId, string memory name, string memory lotNumber, address manufacturer, address currentHolder, uint256 timestamp, bool isCounterfeit) = drugTracking.getDrugInfo(_drugId);
+        (,,,, address currentHolder,,bool isCounterfeit) = drugTracking.getDrugInfo(_drugId);
 
-        if (manufacturer == address(0) || keccak256(abi.encodePacked(name)) == keccak256(abi.encodePacked(""))) {
-            return false; // Drug doesn't exist or has invalid data
+        // Check if the drug exists (a non-existent drug will have address(0) as currentHolder)
+        if (currentHolder == address(0)) {
+            return false; // Drug doesn't exist
         }
 
         return !isCounterfeit; // Return true if it's not marked as counterfeit
     }
 
     // Placeholder for a more sophisticated verification process (e.g., signature verification)
-    function verifyDrugSignature(uint256 _drugId, bytes memory _signature) public view returns (bool) {
+    function verifyDrugSignature(uint256 /* _drugId */, bytes memory /* _signature */) public pure returns (bool) {
         // In a real implementation, this function would:
         // 1. Retrieve the drug information.
         // 2. Reconstruct the message that was signed.
